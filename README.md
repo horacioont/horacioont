@@ -1,16 +1,47 @@
-## Hi there 👋
+### Hola, soy Horacio Ontiveros 👋
 
-<!--
-**horacioont/horacioont** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+**Full-Stack Engineer & Creative Developer**
+*Bridging the gap between UI/UX Design and Technical Implementation.*
 
-Here are some ideas to get you started:
+Soy un desarrollador con más de 10 años de experiencia especializándome en construir aplicaciones web escalables y soluciones visuales de alto impacto. Mi enfoque híbrido combina la lógica de ingeniería con la precisión del diseño.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+---
+
+### 🛠 Tech Stack
+
+**Frontend & Creative Engineering**
+* 💻 **Core:** React, Next.js, Vue.js, Astro 🚀, TypeScript, JavaScript (ES6+)
+* 🎨 **Design & No-Code:** Figma, Adobe Creative Suite, Webflow, Design Systems
+* 🛠 **Build Tools:** Vite, Webpack
+* 💅 **Styling:** Tailwind CSS, Bootstrap, CSS3/Sass
+
+**Data, Analytics & Growth Strategy**
+* 📊 **Analytics:** Google Tag Manager (GTM), GA4, Adobe Analytics, Looker Studio
+* 📈 **Growth Engineering:** Generative Engine Optimization (GEO), Technical SEO, Conversion Rate Optimization (CRO), A/B Testing
+* 🔗 **Integration:** Data Layers, Server-Side Tracking (SST), Conversion API (CAPI)
+
+**Backend & Cloud Infrastructure**
+* ☁️ **Cloud & BaaS:** Google Cloud (Cloud Run, Compute Engine, SQL), Firebase, Supabase
+* ⚙️ **Backend:** Python (FastAPI / Reflex / Flask), Node.js, PHP (Laravel)
+* 🗄 **Databases:** PostgreSQL, MySQL, MariaDB
+* 🚀 **DevOps & Deploy:** Docker, CI/CD (GitLab/GitHub Actions), Vercel, Netlify
+* 🧪 **Testing:** Jest, Unit Testing
+
+---
+
+### 🔒 ¿Dónde está mi código?
+
+Si ves poca actividad por aquí, es por dos razones importantes:
+
+1.  **GitLab First:** La mayor parte de mi flujo de trabajo y repositorios personales viven en **GitLab**, que es mi plataforma principal para CI/CD y gestión de proyectos.
+2.  **Privacidad & NDAs:** Trabajo principalmente con clientes corporativos y startups bajo acuerdos de confidencialidad estrictos (NDA). Por respeto a la privacidad de mis clientes y la naturaleza propietaria de los proyectos, el código fuente de mi trabajo más reciente no es público.
+
+*Sin embargo, estaré encantado de mostrarte demos en vivo o discutir la arquitectura de mis soluciones en una entrevista.*
+
+---
+
+### 🌐 Conectemos
+
+* 💼 [LinkedIn](https://linkedin.com/in/horacioon)
+* 📄 [CV / Portfolio](https://horacio.ontiveros.cv)
+* 📧 [horacio@nucleostudio.com](mailto:horacio@nucleostudio.com)
