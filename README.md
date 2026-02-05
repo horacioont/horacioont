@@ -46,6 +46,8 @@ Aunque mis proyectos son privados, aquí comparto algunos patrones de código y 
 * 🚀 **[Astro + Vue: Islands Architecture](https://gist.github.com/horacioont/8e43a9b4dafe47b36b340a0a9a4c4225)**
   * *Patrón avanzado de manejo de estado compartido (Nano Stores) entre componentes hidratados independientemente.*
 
+* 📊 **[GA4: Type-Safe E-commerce Helper](https://gist.github.com/horacioont/c108ddab501ae897957eceb386be86c5)**
+  * *Utility en TypeScript para garantizar la integridad de datos y evitar duplicidad en transacciones.*
 ---
 
 ### 🌐 Conectemos
