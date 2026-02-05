@@ -43,15 +43,8 @@ Si ves poca actividad por aquí, es por dos razones importantes:
 
 Aunque mis proyectos son privados, aquí comparto algunos patrones de código y utilidades que uso frecuentemente:
 
-* 🚀 **[Astro + Vue: Islands Architecture]([https://gist.github.com/horacioont/8e43a9b4dafe47b36b340a0a9a4c4225])**
+* 🚀 **[Astro + Vue: Islands Architecture](https://gist.github.com/horacioont/8e43a9b4dafe47b36b340a0a9a4c4225)**
   * *Patrón avanzado de manejo de estado compartido (Nano Stores) entre componentes hidratados independientemente.*
- 
-* ⚛️ **[React: usePageTracking Hook](PEGAR_LINK_AQUÍ)**
-    * *Custom hook para manejar vistas virtuales en SPAs y enviarlas al Data Layer.*
-* 📊 **[GTM: E-commerce Event Helper](PEGAR_LINK_AQUÍ)**
-    * *Estructura estándar JSON para eventos de compra en GA4 (Server-Side friendly).*
-* 🐍 **[Python: API Response Handler](PEGAR_LINK_AQUÍ)**
-    * *Snippet de Reflex/FastAPI para normalizar respuestas JSON.*
 
 ---
 
