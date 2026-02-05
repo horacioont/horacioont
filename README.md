@@ -29,16 +29,6 @@ Soy un desarrollador con más de 10 años de experiencia especializándome en co
 
 ---
 
-### 🔒 ¿Dónde está mi código?
-
-Si ves poca actividad por aquí, es por dos razones importantes:
-
-1.  **GitLab First:** La mayor parte de mi flujo de trabajo y repositorios personales viven en **GitLab**, que es mi plataforma principal para CI/CD y gestión de proyectos.
-2.  **Privacidad & NDAs:** Trabajo principalmente con clientes corporativos y startups bajo acuerdos de confidencialidad estrictos (NDA). Por respeto a la privacidad de mis clientes y la naturaleza propietaria de los proyectos, el código fuente de mi trabajo más reciente no es público.
-
-*Sin embargo, estaré encantado de mostrarte demos en vivo o discutir la arquitectura de mis soluciones en una entrevista.*
-
-
 ### 🧩 Code Snippets & Samples
 
 Aunque mis proyectos son privados, aquí comparto algunos patrones de código y utilidades que uso frecuentemente:
@@ -48,6 +38,18 @@ Aunque mis proyectos son privados, aquí comparto algunos patrones de código y 
 
 * 📊 **[GA4: Type-Safe E-commerce Helper](https://gist.github.com/horacioont/c108ddab501ae897957eceb386be86c5)**
   * *Utility en TypeScript para garantizar la integridad de datos y evitar duplicidad en transacciones.*
+
+---
+
+### 🔒 ¿Dónde está mi código?
+
+Si ves poca actividad por aquí, es por dos razones importantes:
+
+1.  **GitLab First:** La mayor parte de mi flujo de trabajo y repositorios personales viven en **GitLab**, que es mi plataforma principal para CI/CD y gestión de proyectos.
+2.  **Privacidad & NDAs:** Trabajo principalmente con clientes corporativos y startups bajo acuerdos de confidencialidad estrictos (NDA). Por respeto a la privacidad de mis clientes y la naturaleza propietaria de los proyectos, el código fuente de mi trabajo más reciente no es público.
+
+*Sin embargo, estaré encantado de mostrarte demos en vivo o discutir la arquitectura de mis soluciones en una entrevista.*
+
 ---
 
 ### 🌐 Conectemos
