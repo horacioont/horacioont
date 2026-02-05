@@ -41,6 +41,10 @@ Aunque mis proyectos son privados, aquí comparto algunos patrones de código y 
 
 * 🛡️ **[Supabase: Multi-Tenant RLS](https://gist.github.com/horacioont/33992b25aeb4048b2daa9dfa695d4b96)**
   * *Estrategia de seguridad Row Level Security para aislar datos de organizaciones en arquitecturas SaaS.*
+
+* ⚡ **[Next.js: App Router & Streaming](https://gist.github.com/horacioont/7478c0275dc7e6b90f096f7d475aeae5)**
+  * *Patrón de Server Components para SEO dinámico y Streaming (Suspense) optimizando Core Web Vitals.*
+
 ---
 
 ### 🔒 ¿Dónde está mi código?
