@@ -39,6 +39,8 @@ Aunque mis proyectos son privados, aquí comparto algunos patrones de código y 
 * 📊 **[GA4: Type-Safe E-commerce Helper](https://gist.github.com/horacioont/c108ddab501ae897957eceb386be86c5)**
   * *Utility en TypeScript para garantizar la integridad de datos y evitar duplicidad en transacciones.*
 
+* 🛡️ **[Supabase: Multi-Tenant RLS](https://gist.github.com/horacioont/33992b25aeb4048b2daa9dfa695d4b96)**
+  * *Estrategia de seguridad Row Level Security para aislar datos de organizaciones en arquitecturas SaaS.*
 ---
 
 ### 🔒 ¿Dónde está mi código?
