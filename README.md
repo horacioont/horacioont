@@ -25,10 +25,10 @@ I am a Software Engineer with over 10 years of experience specializing in buildi
 
 While my full enterprise projects are private, here are some advanced patterns and utilities I frequently implement in my day-to-day workflow:
 
-* **[Astro + Vue: Islands Architecture](#)** - Advanced shared state management pattern (Nano Stores) between independently hydrated components.
-* **[GA4: Type-Safe E-commerce Helper](#)** - TypeScript utility to ensure data integrity and prevent duplicate transactions in headless setups.
-* **[Supabase: Multi-Tenant RLS](#)** - Row Level Security strategy to isolate organizational data in SaaS architectures.
-* **[Next.js: App Router & Streaming](#)** - Server Components pattern for dynamic SEO and Streaming (Suspense) to optimize Core Web Vitals.
+* **[Astro + Vue: Islands Architecture](https://gist.github.com/horacioont/8e43a9b4dafe47b36b340a0a9a4c4225)** - Advanced shared state management pattern (Nano Stores) between independently hydrated components.
+* **[GA4: Type-Safe E-commerce Helper](https://gist.github.com/horacioont/c108ddab501ae897957eceb386be86c5)** - TypeScript utility to ensure data integrity and prevent duplicate transactions in headless setups.
+* **[Supabase: Multi-Tenant RLS](https://gist.github.com/horacioont/33992b25aeb4048b2daa9dfa695d4b96)** - Row Level Security strategy to isolate organizational data in SaaS architectures.
+* **[Next.js: App Router & Streaming](https://gist.github.com/horacioont/7478c0275dc7e6b90f096f7d475aeae5)** - Server Components pattern for dynamic SEO and Streaming (Suspense) to optimize Core Web Vitals.
 
 *(Note: Click the links above to see the GitHub Gists)*
 
@@ -90,12 +90,23 @@ Soy un desarrollador con más de 10 años de experiencia especializándome en co
 
 While my full enterprise projects are private, here are some advanced patterns and utilities I frequently implement in my day-to-day workflow:
 
-* **[Astro + Vue: Islands Architecture](https://gist.github.com/horacioont/8e43a9b4dafe47b36b340a0a9a4c4225)** - Advanced shared state management pattern (Nano Stores) between independently hydrated components.
-* **[GA4: Type-Safe E-commerce Helper](https://gist.github.com/horacioont/c108ddab501ae897957eceb386be86c5)** - TypeScript utility to ensure data integrity and prevent duplicate transactions in headless setups.
-* **[Supabase: Multi-Tenant RLS](https://gist.github.com/horacioont/33992b25aeb4048b2daa9dfa695d4b96)** - Row Level Security strategy to isolate organizational data in SaaS architectures.
-* **[Next.js: App Router & Streaming](https://gist.github.com/horacioont/7478c0275dc7e6b90f096f7d475aeae5)** - Server Components pattern for dynamic SEO and Streaming (Suspense) to optimize Core Web Vitals.
+### 🧩 Code Snippets & Samples
 
-*(Note: Click the links above to see the GitHub Gists)*
+Aunque mis proyectos completos son privados, aquí comparto algunos patrones de código y utilidades que implemento frecuentemente en mi día a día:
+
+* 🚀 **[Astro + Vue: Islands Architecture](https://gist.github.com/horacioont/8e43a9b4dafe47b36b340a0a9a4c4225)**
+  * *Patrón avanzado de manejo de estado compartido (Nano Stores) entre componentes hidratados independientemente.*
+
+* 📊 **[GA4: Type-Safe E-commerce Helper](https://gist.github.com/horacioont/c108ddab501ae897957eceb386be86c5)**
+  * *Utility en TypeScript para garantizar la integridad de datos y evitar duplicidad en transacciones.*
+
+* 🛡️ **[Supabase: Multi-Tenant RLS](https://gist.github.com/horacioont/33992b25aeb4048b2daa9dfa695d4b96)**
+  * *Estrategia de seguridad Row Level Security para aislar datos de organizaciones en arquitecturas SaaS.*
+
+* ⚡ **[Next.js: App Router & Streaming](https://gist.github.com/horacioont/7478c0275dc7e6b90f096f7d475aeae5)**
+  * *Patrón de Server Components para SEO dinámico y Streaming (Suspense) optimizando Core Web Vitals.*
+
+*(Nota: Haz clic en los enlaces de arriba para ver los Gists en GitHub)*
 
 ---
 
