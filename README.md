@@ -1,8 +1,8 @@
 # Hi there, I'm Horacio Ontiveros 👋    (Versión en español abajo)
 
-**Senior Full-Stack Engineer & Creative Developer** | Bridging the gap between UI/UX Design and Technical Implementation.
+**Senior Full-Stack & Product Engineer | Bridging the gap between complex logic and pixel-perfect UI.**
 
-I am a Software Engineer with over 10 years of experience specializing in building scalable web applications and high-impact visual solutions. My hybrid "Creative Engineer" approach combines robust backend engineering logic with pixel-perfect frontend precision.
+I am a Software Engineer with over 11 years of experience specializing in building scalable SaaS platforms, high-performance web applications, and robust cloud infrastructures. My hybrid "Product Engineer" approach combines deep backend engineering logic (Python/PostgreSQL) with frontend precision (React/Next.js) to deliver end-to-end business value.
 
 ## 🛠 Tech Stack
 
@@ -57,10 +57,9 @@ However, I am more than happy to demonstrate live UI demos, discuss my system de
 
 ### Hola, soy Horacio Ontiveros 👋
 
-**Full-Stack Engineer & Creative Developer**
-*Bridging the gap between UI/UX Design and Technical Implementation.*
+**Senior Full-Stack & Product Engineer | Cerrando la brecha entre la lógica compleja y las interfaces *pixel-perfect*.**
 
-Soy un desarrollador con más de 10 años de experiencia especializándome en construir aplicaciones web escalables y soluciones visuales de alto impacto. Mi enfoque híbrido combina la lógica de ingeniería con la precisión del diseño.
+Soy un Ingeniero de Software con más de 11 años de experiencia especializándome en la construcción de plataformas SaaS escalables, aplicaciones web de alto rendimiento e infraestructuras en la nube robustas. Mi enfoque híbrido como "Ingeniero de Producto" combina una lógica profunda de ingeniería backend (Python/PostgreSQL) con la precisión del frontend (React/Next.js) para entregar valor de negocio de extremo a extremo.
 
 ---
 
