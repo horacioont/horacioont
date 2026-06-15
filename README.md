@@ -2,7 +2,7 @@
 
 **Senior Full-Stack & Product Engineer | Bridging the gap between complex logic and pixel-perfect UI.**
 
-I am a Software Engineer with over 11 years of experience specializing in building scalable SaaS platforms, high-performance web applications, and robust cloud infrastructures. My hybrid "Product Engineer" approach combines deep backend engineering logic (Python/PostgreSQL) with frontend precision (React/Next.js) to deliver end-to-end business value.
+I am a Software Engineer with over 10+ years of experience specializing in building scalable SaaS platforms, high-performance web applications, and robust cloud infrastructures. My hybrid "Product Engineer" approach combines deep backend engineering logic (Python/PostgreSQL) with frontend precision (React/Next.js) to deliver end-to-end business value.
 
 ## 🛠 Tech Stack
 
