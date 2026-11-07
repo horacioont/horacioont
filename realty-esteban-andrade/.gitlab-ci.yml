@@ -1,5 +1,13 @@
-# Build + deploy a GitLab Pages en cada push a main (incluye los cambios hechos desde /admin).
-# Si prefieres Netlify/Vercel/Cloudflare Pages, conecta el repo allí y borra el job "pages".
+# Build en GitLab CI + deploy a Cloudflare Pages.
+# - Push a main            → producción
+# - Merge requests / ramas → preview con URL propia (https://<rama>.esteban-andrade-realty.pages.dev)
+# Los cambios hechos desde /admin (Decap) son commits a main, así que se publican solos.
+#
+# Variables de CI/CD necesarias (Settings → CI/CD → Variables, marcadas como Masked):
+#   CLOUDFLARE_API_TOKEN   token con permiso "Cloudflare Pages: Edit"
+#   CLOUDFLARE_ACCOUNT_ID  ID de la cuenta de Cloudflare
+#   SITE_URL               (opcional) dominio final, p. ej. https://estebanandrade.com
+#   PUBLIC_FORM_ENDPOINT   (opcional) endpoint de formularios
 image: node:22-alpine
 
 cache:
@@ -9,27 +17,32 @@ cache:
 variables:
   npm_config_cache: '$CI_PROJECT_DIR/.npm'
   ASTRO_TELEMETRY_DISABLED: '1'
+  CF_PROJECT: esteban-andrade-realty
 
-stages: [check, deploy]
+stages: [build, deploy]
 
 build:
-  stage: check
+  stage: build
   script:
     - npm ci
     - npm run build
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   artifacts:
     paths: [dist]
-    expire_in: 3 days
-
-pages:
-  stage: deploy
-  script:
-    - npm ci
-    - npm run build
-    - rm -rf public && mv dist public
-  artifacts:
-    paths: [public]
+    expire_in: 1 day
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH
+
+deploy:
+  stage: deploy
+  needs: [build]
+  script:
+    - npx --yes wrangler@4 pages project create "$CF_PROJECT" --production-branch main || true
+    - npx --yes wrangler@4 pages deploy dist --project-name "$CF_PROJECT" --branch "${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME:-$CI_COMMIT_BRANCH}" --commit-hash "$CI_COMMIT_SHA" --commit-message "$CI_COMMIT_TITLE"
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+  rules:
+    - if: $CLOUDFLARE_API_TOKEN == null || $CLOUDFLARE_API_TOKEN == ''
+      when: never
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH

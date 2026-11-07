@@ -2,7 +2,7 @@
 
 Versión nueva de [estebanandrade.exprealty.com](https://estebanandrade.exprealty.com): una experiencia **tipo app**, rápida y centrada en lo que importa en bienes raíces: **fotos grandes y datos precisos, fáciles de encontrar**.
 
-**Stack:** [Astro 7](https://astro.build) (HTML estático) + **islas de Vue 3** solo donde hay interacción (mismo enfoque que leonleroy.com) · Tailwind CSS 4 · [Decap CMS](https://decapcms.org) sobre GitLab · Leaflet para mapas.
+**Stack:** [Astro 7](https://astro.build) (HTML estático) + **islas de Vue 3** solo donde hay interacción (mismo enfoque que leonleroy.com) · Tailwind CSS 4 · [Decap CMS](https://decapcms.org) sobre GitLab · Leaflet para mapas · Cloudflare Pages.
 
 ---
 
@@ -89,21 +89,33 @@ Los **datos del agente** (teléfono, WhatsApp, bio, broker, moneda, unidades, va
 
 ---
 
-## Deploy
+## Deploy: Cloudflare Pages
 
-`.gitlab-ci.yml` ya construye y publica en **GitLab Pages** en cada push a `main`. Alternativas (todas gratuitas para este tamaño): Netlify, Cloudflare Pages o Vercel. Solo hay que conectar el repo con build command `npm run build` y output `dist`.
+`.gitlab-ci.yml` construye el sitio en GitLab CI y lo sube a **Cloudflare Pages** con `wrangler`:
+
+- **Push a `main`** → producción (también los cambios hechos desde `/admin`).
+- **Cualquier otra rama o MR** → preview con su propia URL (`https://<rama>.esteban-andrade-realty.pages.dev`), sin indexar en Google.
+
+Configuración, una sola vez:
+1. Cloudflare → *My Profile → API Tokens → Create token* → plantilla **"Edit Cloudflare Workers"**, o uno personalizado con *Account → Cloudflare Pages → Edit*.
+2. GitLab → *Settings → CI/CD → Variables* (marcadas como *Masked*): `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`. Opcionales: `SITE_URL` y `PUBLIC_FORM_ENDPOINT`.
+3. El primer pipeline crea el proyecto `esteban-andrade-realty` en Pages.
+4. Dominio: Cloudflare → *Workers & Pages → esteban-andrade-realty → Custom domains*. Si el DNS ya está en Cloudflare, es automático.
+
+`public/_headers` agrega caché de 1 año a los assets con hash, cabeceras de seguridad y `noindex` para `/admin` y los previews.
+
+> Alternativa sin CI: en Cloudflare, *Create → Pages → Connect to Git → GitLab* con build `npm run build` y output `dist`. En ese caso borra el job `deploy` de `.gitlab-ci.yml`.
 
 Variables de entorno (ver `.env.example`):
 - `SITE_URL`: dominio final (canonical, sitemap, OG).
 - `PUBLIC_FORM_ENDPOINT`: endpoint de Formspree / Web3Forms / Basin para los formularios. **Si está vacío, el formulario abre WhatsApp** con el mensaje ya armado.
-
----
 
 ## Pendientes antes de producción
 - [ ] Datos reales del agente en `src/data/site.json` (teléfono, WhatsApp, licencia, zonas, foto en `public/`).
 - [ ] Borrar las 6 propiedades **DEMO** (`*-ejemplo`) y cargar el inventario real con fotos.
 - [ ] Logos oficiales (REALTOR®, Equal Housing Opportunity, eXp) y textos legales que pida el broker.
 - [ ] `repo` y `app_id` en `public/admin/config.yml`; dominio en `SITE_URL` y `public/robots.txt`.
+- [ ] Variables `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` en GitLab CI.
 - [ ] Proveedor de mapas con clave para producción (MapTiler / Stadia). Hoy usa tiles de CARTO/OSM.
 - [ ] Endpoint de formularios y, si se quiere, conexión al CRM (FollowUpBoss, kvCORE…).
 - [ ] Analítica (Plausible / GA4).

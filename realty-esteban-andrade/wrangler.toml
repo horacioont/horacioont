@@ -1,0 +1,4 @@
+# Cloudflare Pages (deploy con `npx wrangler pages deploy` desde GitLab CI)
+name = "esteban-andrade-realty"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-11-01"
