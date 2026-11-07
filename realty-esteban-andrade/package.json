@@ -1,0 +1,27 @@
+{
+  "name": "esteban-andrade-realty",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "cms": "npx decap-server",
+    "placeholders": "node scripts/generate-placeholders.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vue": "^7.1.2",
+    "@tailwindcss/vite": "^4.3.5",
+    "astro": "^7.4.7",
+    "leaflet": "^1.9.4",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.3.5",
+    "vue": "^3.5.45"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  }
+}

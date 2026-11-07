@@ -1,0 +1,224 @@
+---
+import { render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import Gallery from '@/islands/Gallery.vue';
+import FavoriteButton from '@/islands/FavoriteButton.vue';
+import ShareButton from '@/islands/ShareButton.vue';
+import MortgageCalculator from '@/islands/MortgageCalculator.vue';
+import ContactForm from '@/islands/ContactForm.vue';
+import PropertyMap from '@/islands/PropertyMap.vue';
+import PropertyGrid from '@/islands/PropertyGrid.vue';
+import { getPropiedades, toCard, type Propiedad } from '@/lib/propiedades';
+import { money, num, area, etiquetas, direccionCorta, whatsappUrl, banosTexto } from '@/lib/format';
+import site from '@/data/site.json';
+
+export async function getStaticPaths() {
+  const all = await getPropiedades();
+  return all.map((p) => ({ params: { slug: p.id }, props: { p, all } }));
+}
+const { p, all } = Astro.props as { p: Propiedad; all: Propiedad[] };
+const d = p.data;
+const { Content } = await render(p);
+
+// Fotos: varios tamaños para que el móvil no descargue imágenes de 4K
+const originales = [{ imagen: d.portada, alt: 'Portada' }, ...d.galeria];
+const fotos = await Promise.all(
+  originales.map(async ({ imagen, alt }) => {
+    const anchos = [640, 1024, 1600];
+    const variantes = await Promise.all(anchos.map((w) => getImage({ src: imagen, width: Math.min(w, imagen.width), format: 'webp', quality: 78 })));
+    const thumb = await getImage({ src: imagen, width: 200, format: 'webp', quality: 60 });
+    const full = await getImage({ src: imagen, width: Math.min(2400, imagen.width), format: 'webp', quality: 85 });
+    return {
+      src: variantes[1].src,
+      srcset: variantes.map((v, i) => `${v.src} ${Math.min(anchos[i], imagen.width)}w`).join(', '),
+      thumb: thumb.src, full: full.src, alt, w: imagen.width, h: imagen.height,
+    };
+  }),
+);
+const og = await getImage({ src: d.portada, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+
+const card = await toCard(p);
+const similares = await Promise.all(
+  all
+    .filter((o) => o.id !== p.id && o.data.operacion === d.operacion && o.data.estado === 'disponible')
+    .sort((a, b) => (a.data.tipo === d.tipo ? -1 : 0) - (b.data.tipo === d.tipo ? -1 : 0) || Math.abs(a.data.precio - d.precio) - Math.abs(b.data.precio - d.precio))
+    .slice(0, 3)
+    .map(toCard),
+);
+
+const esTerreno = d.tipo === 'terreno';
+const renta = d.operacion === 'renta';
+const cerrada = d.estado === 'vendida' || d.estado === 'rentada';
+const direccion = direccionCorta(d.direccion);
+const precioM2 = d.construccion && !renta ? d.precio / d.construccion : null;
+const diasPublicada = Math.max(0, Math.round((Date.now() - +d.fecha) / 864e5));
+const proximoOpen = d.openHouse.find((o) => +o.fin > Date.now());
+const fmtFecha = (dt: Date, o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(site.locale, o).format(dt);
+
+const datos = [
+  !esTerreno && { icon: 'bed', k: 'Recámaras', v: String(d.recamaras) },
+  !esTerreno && { icon: 'bath', k: 'Baños', v: banosTexto(d.banos, d.mediosBanos) },
+  d.construccion && { icon: 'area', k: 'Construcción', v: area(d.construccion) },
+  d.terreno && { icon: 'lot', k: 'Terreno', v: area(d.terreno) },
+].filter(Boolean) as { icon: string; k: string; v: string }[];
+
+const ficha = [
+  ['Tipo', etiquetas.tipo[d.tipo]],
+  ['Estado', etiquetas.estado[d.estado]],
+  ['Año de construcción', d.anio],
+  ['Estacionamientos', d.estacionamientos],
+  ['Cuota HOA / mantenimiento', d.cuotaMantenimiento != null && `${money(d.cuotaMantenimiento)}/mes`],
+  ['Impuestos anuales', d.impuestos != null && money(d.impuestos)],
+  [`Precio por ${site.unidadArea}`, precioM2 && money(precioM2)],
+  ['MLS #', d.mls],
+  ['Publicada', diasPublicada === 0 ? 'Hoy' : `Hace ${diasPublicada} día${diasPublicada === 1 ? '' : 's'}`],
+].filter(([, v]) => v !== undefined && v !== null && v !== false && v !== '') as [string, string | number][];
+
+const msg = `Hola ${site.agente.nombre.split(' ')[0]}, me interesa "${d.titulo}"${d.mls ? ` (MLS ${d.mls})` : ''}: ${new URL(Astro.url.pathname, Astro.site)}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateListing',
+  name: d.titulo,
+  url: new URL(Astro.url.pathname, Astro.site).toString(),
+  datePosted: d.fecha.toISOString(),
+  image: fotos.slice(0, 6).map((f) => new URL(f.full, Astro.site).toString()),
+  offers: { '@type': 'Offer', price: d.precio, priceCurrency: site.moneda, availability: cerrada ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock', businessFunction: renta ? 'http://purl.org/goodrelations/v1#LeaseOut' : 'http://purl.org/goodrelations/v1#Sell' },
+  about: {
+    '@type': esTerreno ? 'Landform' : d.tipo === 'casa' ? 'SingleFamilyResidence' : 'Accommodation',
+    numberOfRooms: d.recamaras || undefined,
+    numberOfBathroomsTotal: d.banos + d.mediosBanos || undefined,
+    floorSize: d.construccion ? { '@type': 'QuantitativeValue', value: d.construccion, unitText: site.unidadArea } : undefined,
+    yearBuilt: d.anio,
+    address: d.direccion.ocultar ? { '@type': 'PostalAddress', addressLocality: d.direccion.ciudad, addressRegion: d.direccion.estado } :
+      { '@type': 'PostalAddress', streetAddress: d.direccion.calle, addressLocality: d.direccion.ciudad, addressRegion: d.direccion.estado, postalCode: d.direccion.cp },
+    geo: d.coordenadas && !d.direccion.ocultar ? { '@type': 'GeoCoordinates', latitude: d.coordenadas.lat, longitude: d.coordenadas.lng } : undefined,
+  },
+};
+const descripcion = d.seo?.descripcion ?? `${etiquetas.tipo[d.tipo]} ${renta ? 'en renta' : 'en venta'} en ${d.direccion.ciudad}: ${money(d.precio)}${!esTerreno ? `, ${d.recamaras} recámaras, ${banosTexto(d.banos, d.mediosBanos)} baños` : ''}${d.construccion ? `, ${area(d.construccion)}` : ''}.`;
+---
+<Base title={d.titulo} description={descripcion} image={og.src} jsonLd={jsonLd} inmersivo>
+  <!-- Barra superior flotante (móvil) -->
+  <div class="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-between p-3 pt-[calc(.75rem+env(safe-area-inset-top))] md:hidden">
+    <button onclick="history.length > 1 ? history.back() : (location.href='/propiedades')" class="pointer-events-auto grid size-10 place-items-center rounded-full bg-white/90 shadow backdrop-blur" aria-label="Regresar"><Icon name="back" /></button>
+    <div class="pointer-events-auto"><FavoriteButton client:idle slug={p.id} /></div>
+  </div>
+
+  <div class="container-app md:pt-6">
+    <nav class="mb-4 hidden text-sm text-muted md:block" aria-label="Migas de pan">
+      <a href="/propiedades" class="hover:underline">Propiedades</a> / <a href={`/propiedades?operacion=${d.operacion}&q=${encodeURIComponent(d.direccion.ciudad)}`} class="hover:underline">{d.direccion.ciudad}</a> / <span class="text-ink">{d.titulo}</span>
+    </nav>
+
+    <Gallery client:load fotos={fotos} titulo={d.titulo} />
+
+    <div class="mt-6 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <article class="min-w-0">
+        <!-- Lo esencial primero: precio, estado, datos clave -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class:list={['rounded-full px-3 py-1 text-xs font-semibold', cerrada ? 'bg-sold text-white' : d.estado === 'en-contrato' ? 'bg-warn text-white' : 'bg-ok/10 text-ok']}>{etiquetas.estado[d.estado]}</span>
+          <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold ring-1 ring-line">{etiquetas.tipo[d.tipo]} · {etiquetas.operacion[d.operacion]}</span>
+          {d.precioAnterior && <span class="rounded-full bg-ok px-3 py-1 text-xs font-semibold text-white">Bajó {money(d.precioAnterior - d.precio)}</span>}
+        </div>
+        <p class="mt-3 flex flex-wrap items-baseline gap-x-3">
+          <span class="text-4xl font-bold tracking-tight">{money(d.precio)}</span>
+          {renta && <span class="text-lg text-muted">/mes</span>}
+          {d.precioAnterior && <s class="text-lg text-muted">{money(d.precioAnterior)}</s>}
+        </p>
+        <h1 class="mt-2 text-2xl sm:text-3xl">{d.titulo}</h1>
+        <p class="mt-1 flex items-center gap-1.5 text-ink-2"><Icon name="pin" size={18} />{direccion}</p>
+
+        <dl class="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-line ring-1 ring-line sm:grid-cols-4">
+          {datos.map((x) => (
+            <div class="bg-white p-4">
+              <dt class="flex items-center gap-1.5 text-xs font-medium text-muted"><Icon name={x.icon} size={16} />{x.k}</dt>
+              <dd class="mt-1 text-xl font-bold">{x.v}</dd>
+            </div>
+          ))}
+        </dl>
+
+        {proximoOpen && (
+          <div class="mt-4 flex items-center gap-3 rounded-2xl bg-accent/10 p-4 text-ink">
+            <Icon name="calendar" class="shrink-0 text-accent" />
+            <p><b>Open house:</b> {fmtFecha(proximoOpen.inicio, { weekday: 'long', day: 'numeric', month: 'long' })}, {fmtFecha(proximoOpen.inicio, { hour: 'numeric', minute: '2-digit' })} – {fmtFecha(proximoOpen.fin, { hour: 'numeric', minute: '2-digit' })}</p>
+          </div>
+        )}
+
+        <div class="mt-4 hidden gap-2 md:flex">
+          <FavoriteButton client:idle slug={p.id} variant="pill" />
+          <ShareButton client:idle titulo={d.titulo} texto={descripcion} />
+          {d.recorridoVirtual && <a class="btn-ghost h-11 px-4 text-sm" href={d.recorridoVirtual} target="_blank" rel="noopener">Recorrido 3D</a>}
+          {d.video && <a class="btn-ghost h-11 px-4 text-sm" href={d.video} target="_blank" rel="noopener">Video</a>}
+        </div>
+
+        {d.caracteristicas.length > 0 && (
+          <section class="mt-8">
+            <h2 class="text-xl">Características</h2>
+            <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+              {d.caracteristicas.map((c) => <li class="flex items-center gap-2 text-ink-2"><Icon name="check" size={18} class="text-ok" />{c}</li>)}
+            </ul>
+          </section>
+        )}
+
+        <section class="mt-8">
+          <h2 class="text-xl">Descripción</h2>
+          <div class="prose-prop mt-3"><Content /></div>
+        </section>
+
+        <section class="mt-8">
+          <h2 class="text-xl">Ficha técnica</h2>
+          <dl class="mt-3 divide-y divide-line rounded-2xl bg-white px-4 ring-1 ring-line">
+            {ficha.map(([k, v]) => <div class="flex justify-between gap-4 py-3 text-sm"><dt class="text-muted">{k}</dt><dd class="text-right font-semibold">{v}</dd></div>)}
+          </dl>
+        </section>
+
+        {d.coordenadas && (
+          <section class="mt-8">
+            <h2 class="text-xl">Ubicación</h2>
+            <p class="mt-1 text-sm text-ink-2">{d.direccion.ocultar ? 'Ubicación aproximada. Dirección exacta al agendar visita.' : direccion}</p>
+            <div class="mt-3 h-72 overflow-hidden rounded-2xl ring-1 ring-line">
+              <PropertyMap client:visible cards={[card]} single zoom={d.direccion.ocultar ? 13 : 15} />
+            </div>
+            {!d.direccion.ocultar && <a class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-brand-2" target="_blank" rel="noopener" href={`https://www.google.com/maps/dir/?api=1&destination=${d.coordenadas.lat},${d.coordenadas.lng}`}>Cómo llegar <Icon name="arrow" size={16} /></a>}
+          </section>
+        )}
+
+        {!renta && !esTerreno && !cerrada && (
+          <section class="mt-8 lg:hidden"><MortgageCalculator client:visible precio={d.precio} impuestos={d.impuestos} hoa={d.cuotaMantenimiento} /></section>
+        )}
+      </article>
+
+      <aside class="min-w-0 space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <div id="contacto" class="scroll-mt-24">
+          <div class="mb-3 flex items-center gap-3">
+            <img src={site.agente.foto} alt="" width="48" height="48" class="size-12 rounded-full bg-white object-cover ring-1 ring-line" />
+            <div><p class="font-semibold">{site.agente.nombre}</p><p class="text-sm text-muted">{site.agente.titulo}</p></div>
+          </div>
+          <ContactForm client:visible propiedad={{ titulo: d.titulo, slug: p.id, mls: d.mls }} />
+        </div>
+        {!renta && !esTerreno && !cerrada && <div class="hidden lg:block"><MortgageCalculator client:visible precio={d.precio} impuestos={d.impuestos} hoa={d.cuotaMantenimiento} /></div>}
+      </aside>
+    </div>
+
+    {similares.length > 0 && (
+      <section class="mt-14">
+        <h2 class="text-2xl">También te pueden interesar</h2>
+        <div class="mt-5"><PropertyGrid client:visible cards={similares} /></div>
+      </section>
+    )}
+  </div>
+
+  <!-- Barra de acción fija (móvil): sustituye a la tab bar en la ficha -->
+  <div class="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white/95 p-3 pb-[calc(.75rem+env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+    <div class="flex gap-2">
+      <a href={`tel:${site.agente.telefono.replace(/[^+\d]/g, '')}`} class="btn-ghost size-12 shrink-0 !p-0" aria-label="Llamar"><Icon name="phone" /></a>
+      <a href={whatsappUrl(msg)} target="_blank" rel="noopener" class="btn-wa size-12 shrink-0 !p-0" aria-label="WhatsApp"><Icon name="whatsapp" /></a>
+      <a href="#contacto" class="btn-primary flex-1">{cerrada ? 'Busco algo similar' : 'Agendar visita'}</a>
+    </div>
+  </div>
+  <style is:global>
+    /* En la ficha la barra de acción reemplaza a la tab bar en móvil */
+    @media (max-width: 767px) { #tabbar { display: none; } }
+  </style>
+</Base>

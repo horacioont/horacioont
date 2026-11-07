@@ -1,0 +1,29 @@
+{
+  "agente": {
+    "nombre": "Esteban Andrade",
+    "titulo": "REALTOR® · eXp Realty",
+    "licencia": "LIC #000000",
+    "telefono": "+1 (000) 000-0000",
+    "whatsapp": "10000000000",
+    "email": "esteban@example.com",
+    "foto": "/agente.svg",
+    "bio": "Te acompaño en cada paso de la compra, venta o renta de tu propiedad: precios claros, información precisa y respuesta rápida. Hablo español e inglés.",
+    "idiomas": ["Español", "English"],
+    "zonas": ["Zona 1", "Zona 2", "Zona 3"]
+  },
+  "broker": {
+    "nombre": "eXp Realty",
+    "direccion": "Dirección de la oficina del broker",
+    "telefono": "+1 (000) 000-0000"
+  },
+  "redes": {
+    "instagram": "",
+    "facebook": "",
+    "linkedin": "",
+    "youtube": ""
+  },
+  "moneda": "USD",
+  "locale": "es-US",
+  "unidadArea": "ft²",
+  "hipoteca": { "tasa": 6.75, "plazo": 30, "enganche": 20 }
+}

@@ -1,0 +1,35 @@
+# Build + deploy a GitLab Pages en cada push a main (incluye los cambios hechos desde /admin).
+# Si prefieres Netlify/Vercel/Cloudflare Pages, conecta el repo allí y borra el job "pages".
+image: node:22-alpine
+
+cache:
+  key: { files: [package-lock.json] }
+  paths: [.npm/]
+
+variables:
+  npm_config_cache: '$CI_PROJECT_DIR/.npm'
+  ASTRO_TELEMETRY_DISABLED: '1'
+
+stages: [check, deploy]
+
+build:
+  stage: check
+  script:
+    - npm ci
+    - npm run build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  artifacts:
+    paths: [dist]
+    expire_in: 3 days
+
+pages:
+  stage: deploy
+  script:
+    - npm ci
+    - npm run build
+    - rm -rf public && mv dist public
+  artifacts:
+    paths: [public]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

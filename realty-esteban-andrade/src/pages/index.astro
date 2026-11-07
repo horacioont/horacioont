@@ -1,0 +1,78 @@
+---
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import QuickSearch from '@/islands/QuickSearch.vue';
+import PropertyGrid from '@/islands/PropertyGrid.vue';
+import { getPropiedades, toCard } from '@/lib/propiedades';
+import { whatsappUrl } from '@/lib/format';
+import site from '@/data/site.json';
+
+const todas = await getPropiedades();
+const activas = todas.filter((p) => p.data.estado === 'disponible' || p.data.estado === 'en-contrato');
+const destacadas = await Promise.all(
+  [...activas.filter((p) => p.data.destacada), ...activas.filter((p) => !p.data.destacada)].slice(0, 6).map(toCard),
+);
+const ciudades = [...new Set(todas.map((p) => p.data.direccion.ciudad))].sort();
+const stats = [
+  { n: activas.filter((p) => p.data.operacion === 'venta').length, l: 'en venta' },
+  { n: activas.filter((p) => p.data.operacion === 'renta').length, l: 'en renta' },
+  { n: todas.filter((p) => p.data.estado === 'vendida').length, l: 'vendidas' },
+];
+---
+<Base title={site.agente.nombre}>
+  <section class="relative overflow-hidden bg-brand text-white">
+    <div class="absolute inset-0 opacity-25 [background:radial-gradient(60%_80%_at_80%_0%,#c08a3e_0%,transparent_60%),radial-gradient(50%_60%_at_0%_100%,#1d4e89_0%,transparent_70%)]" aria-hidden="true"></div>
+    <div class="container-app relative pb-28 pt-10 sm:pt-16 md:pb-36">
+      <p class="label !text-white/70">{site.agente.titulo}</p>
+      <h1 class="mt-3 max-w-3xl text-4xl leading-[1.05] sm:text-6xl">Encuentra tu próximo hogar, sin complicaciones.</h1>
+      <p class="mt-4 max-w-xl text-lg text-white/80">Propiedades verificadas, fotos reales y toda la información que necesitas en un solo lugar.</p>
+      <ul class="mt-6 flex gap-6 text-sm">
+        {stats.map((s) => <li><b class="block text-2xl font-bold">{s.n}</b><span class="text-white/70">{s.l}</span></li>)}
+      </ul>
+    </div>
+  </section>
+  <div class="container-app relative -mt-20 md:-mt-24">
+    <QuickSearch client:idle ciudades={ciudades} />
+  </div>
+
+  <section class="container-app mt-14">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <h2 class="text-3xl">Propiedades destacadas</h2>
+        <p class="mt-1 text-ink-2">Seleccionadas por {site.agente.nombre.split(' ')[0]}.</p>
+      </div>
+      <a href="/propiedades" class="hidden items-center gap-1 font-semibold text-brand-2 sm:flex">Ver todas <Icon name="arrow" size={18} /></a>
+    </div>
+    <div class="mt-6"><PropertyGrid client:visible cards={destacadas} /></div>
+    <a href="/propiedades" class="btn-ghost mt-6 w-full sm:hidden">Ver todas las propiedades</a>
+  </section>
+
+  <section class="container-app mt-16 grid gap-4 md:grid-cols-3">
+    {[
+      { icon: 'search', t: 'Compra', d: 'Te ayudo a encontrar, negociar y cerrar con la información clara desde el día uno.', href: '/propiedades', cta: 'Ver propiedades' },
+      { icon: 'tag', t: 'Vende', d: 'Fotografía profesional, precio basado en datos y difusión en MLS y redes.', href: '/contacto?motivo=vender', cta: '¿Cuánto vale mi casa?' },
+      { icon: 'home', t: 'Renta', d: 'Rentas verificadas y acompañamiento en solicitud y contrato.', href: '/propiedades?operacion=renta', cta: 'Ver rentas' },
+    ].map((s) => (
+      <a href={s.href} class="card group p-6 transition hover:-translate-y-0.5">
+        <span class="grid size-11 place-items-center rounded-xl bg-brand/10 text-brand"><Icon name={s.icon} /></span>
+        <h3 class="mt-4 text-xl">{s.t}</h3>
+        <p class="mt-1 text-ink-2">{s.d}</p>
+        <span class="mt-4 inline-flex items-center gap-1 font-semibold text-brand-2">{s.cta} <Icon name="arrow" size={16} class="transition group-hover:translate-x-0.5" /></span>
+      </a>
+    ))}
+  </section>
+
+  <section class="container-app mt-16">
+    <div class="card grid items-center gap-6 overflow-hidden p-6 md:grid-cols-[auto_1fr_auto] md:p-8">
+      <img src={site.agente.foto} alt={site.agente.nombre} width="112" height="112" class="size-28 rounded-2xl bg-sand object-cover" />
+      <div>
+        <h2 class="text-2xl">Hola, soy {site.agente.nombre}</h2>
+        <p class="mt-2 max-w-2xl text-ink-2">{site.agente.bio}</p>
+      </div>
+      <div class="flex flex-col gap-2 sm:flex-row md:flex-col">
+        <a class="btn-wa" href={whatsappUrl('Hola Esteban, vi tu página y me gustaría información.')} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />WhatsApp</a>
+        <a class="btn-ghost" href="/sobre-mi">Conóceme</a>
+      </div>
+    </div>
+  </section>
+</Base>

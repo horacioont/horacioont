@@ -1,0 +1,23 @@
+---
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import ContactForm from '@/islands/ContactForm.vue';
+import site from '@/data/site.json';
+import { whatsappUrl } from '@/lib/format';
+---
+<Base title="Contacto" description={`Contacta a ${site.agente.nombre} para comprar, vender o rentar.`}>
+  <div class="container-app grid gap-8 pt-8 md:grid-cols-2">
+    <div>
+      <h1 class="text-3xl sm:text-4xl">Hablemos</h1>
+      <p class="mt-2 text-ink-2">Respondo el mismo día. Elige el medio que te quede más cómodo.</p>
+      <div class="mt-6 grid gap-3">
+        <a class="card flex items-center gap-4 p-4" href={`tel:${site.agente.telefono.replace(/[^+\d]/g, '')}`}><span class="grid size-11 place-items-center rounded-xl bg-brand/10 text-brand"><Icon name="phone" /></span><span><b class="block">Llamar</b><span class="text-ink-2">{site.agente.telefono}</span></span></a>
+        <a class="card flex items-center gap-4 p-4" href={whatsappUrl('Hola Esteban, ')} target="_blank" rel="noopener"><span class="grid size-11 place-items-center rounded-xl bg-[#25d366]/15 text-[#128c4a]"><Icon name="whatsapp" /></span><span><b class="block">WhatsApp</b><span class="text-ink-2">Mensaje directo</span></span></a>
+        <a class="card flex items-center gap-4 p-4" href={`mailto:${site.agente.email}`}><span class="grid size-11 place-items-center rounded-xl bg-brand/10 text-brand"><Icon name="mail" /></span><span><b class="block">Email</b><span class="text-ink-2">{site.agente.email}</span></span></a>
+      </div>
+    </div>
+    <div>
+      <ContactForm client:load />
+    </div>
+  </div>
+</Base>

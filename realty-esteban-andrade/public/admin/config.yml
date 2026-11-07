@@ -1,0 +1,180 @@
+# Decap CMS — panel en /admin
+# Docs: https://decapcms.org/docs/gitlab-backend/
+backend:
+  name: gitlab
+  repo: TU-GRUPO/esteban-andrade-realty   # ← ruta del proyecto en GitLab
+  branch: main
+  auth_type: pkce
+  app_id: REEMPLAZAR_CON_APPLICATION_ID     # ← GitLab > Preferences > Applications (scope: api)
+  # Para GitLab self-hosted:
+  # base_url: https://gitlab.tu-dominio.com
+  # api_root: https://gitlab.tu-dominio.com/api/v4
+
+# Para editar en local sin login: `npm run cms` en otra terminal y abre http://localhost:4321/admin
+local_backend: true
+
+# Borradores → En revisión → Listo (crea merge requests). Descomenta para activarlo:
+# publish_mode: editorial_workflow
+
+locale: es
+site_url: https://estebanandrade.com
+display_url: https://estebanandrade.com
+logo_url: /favicon.svg
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: propiedades
+    label: Propiedades
+    label_singular: Propiedad
+    folder: src/content/propiedades
+    path: '{{slug}}/index'
+    # Las fotos se guardan junto a cada propiedad y Astro las optimiza (WebP, varios tamaños)
+    media_folder: ''
+    public_folder: ''
+    create: true
+    slug: '{{titulo}}'
+    summary: '{{titulo}} — {{precio}} · {{estado}}'
+    sortable_fields: [fecha, precio, titulo]
+    view_filters:
+      - { label: Disponibles, field: estado, pattern: disponible }
+      - { label: En contrato, field: estado, pattern: en-contrato }
+      - { label: Vendidas / rentadas, field: estado, pattern: 'vendida|rentada' }
+      - { label: Renta, field: operacion, pattern: renta }
+    view_groups:
+      - { label: Ciudad, field: direccion.ciudad }
+    fields:
+      - { label: Título, name: titulo, widget: string, hint: 'Corto y descriptivo. Ej: "Casa con alberca en Coral Gables"' }
+      - label: Estado
+        name: estado
+        widget: select
+        default: disponible
+        options:
+          - { label: Disponible, value: disponible }
+          - { label: En contrato, value: en-contrato }
+          - { label: Vendida, value: vendida }
+          - { label: Rentada, value: rentada }
+      - { label: Operación, name: operacion, widget: select, options: [{ label: Venta, value: venta }, { label: Renta, value: renta }] }
+      - label: Tipo
+        name: tipo
+        widget: select
+        options:
+          - { label: Casa, value: casa }
+          - { label: Departamento, value: departamento }
+          - { label: Condominio, value: condominio }
+          - { label: Townhouse, value: townhouse }
+          - { label: Terreno, value: terreno }
+          - { label: Comercial, value: comercial }
+          - { label: Multifamiliar, value: multifamiliar }
+      - { label: Precio, name: precio, widget: number, value_type: int, min: 0, hint: 'Sin comas ni símbolo. En renta: precio mensual.' }
+      - { label: Precio anterior, name: precioAnterior, widget: number, value_type: int, required: false, hint: 'Llénalo solo si el precio bajó; se mostrará como "Rebajada".' }
+      - label: Foto de portada
+        name: portada
+        widget: image
+        hint: 'Horizontal, mínimo 1600 px de ancho. Es la foto que aparece en búsquedas y al compartir.'
+      - label: Galería
+        name: galeria
+        widget: list
+        summary: '{{fields.alt}}'
+        hint: 'Arrastra para ordenar. Recomendado: fachada, sala, cocina, recámaras, baños, exterior.'
+        fields:
+          - { label: Foto, name: imagen, widget: image }
+          - { label: Descripción (alt), name: alt, widget: string, required: false, hint: 'Ej: "Cocina con isla"' }
+      - label: Dirección
+        name: direccion
+        widget: object
+        collapsed: false
+        fields:
+          - { label: Calle y número, name: calle, widget: string }
+          - { label: Colonia / vecindario, name: colonia, widget: string, required: false }
+          - { label: Ciudad, name: ciudad, widget: string }
+          - { label: Estado, name: estado, widget: string }
+          - { label: Código postal, name: cp, widget: string, required: false }
+          - { label: Ocultar dirección exacta, name: ocultar, widget: boolean, default: false, hint: 'Muestra solo la zona y un punto aproximado en el mapa.' }
+      - label: Coordenadas
+        name: coordenadas
+        widget: object
+        required: false
+        hint: 'En Google Maps: clic derecho sobre la propiedad → copia los números (lat, lng).'
+        fields:
+          - { label: Latitud, name: lat, widget: number, value_type: float }
+          - { label: Longitud, name: lng, widget: number, value_type: float }
+      - { label: Recámaras, name: recamaras, widget: number, value_type: int, default: 0, min: 0 }
+      - { label: Baños completos, name: banos, widget: number, value_type: int, default: 0, min: 0 }
+      - { label: Medios baños, name: mediosBanos, widget: number, value_type: int, default: 0, min: 0 }
+      - { label: Construcción (ft²), name: construccion, widget: number, value_type: int, required: false }
+      - { label: Terreno (ft²), name: terreno, widget: number, value_type: int, required: false }
+      - { label: Estacionamientos, name: estacionamientos, widget: number, value_type: int, required: false }
+      - { label: Año de construcción, name: anio, widget: number, value_type: int, required: false }
+      - { label: Cuota HOA / mantenimiento (mensual), name: cuotaMantenimiento, widget: number, value_type: int, required: false }
+      - { label: Impuestos anuales, name: impuestos, widget: number, value_type: int, required: false }
+      - { label: MLS #, name: mls, widget: string, required: false }
+      - { label: Características, name: caracteristicas, widget: list, required: false, hint: 'Separadas por coma. Ej: Alberca, Cocina con isla, Paneles solares' }
+      - { label: Descripción, name: body, widget: markdown, buttons: [bold, italic, link, heading-two, bulleted-list], editor_components: [] }
+      - { label: Destacada en inicio, name: destacada, widget: boolean, default: false }
+      - { label: Fecha de publicación, name: fecha, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD/MM/YYYY', time_format: false }
+      - { label: Video (YouTube/Vimeo), name: video, widget: string, required: false }
+      - { label: Recorrido virtual (Matterport, etc.), name: recorridoVirtual, widget: string, required: false }
+      - label: Open house
+        name: openHouse
+        widget: list
+        required: false
+        fields:
+          - { label: Inicio, name: inicio, widget: datetime }
+          - { label: Fin, name: fin, widget: datetime }
+      - label: SEO
+        name: seo
+        widget: object
+        collapsed: true
+        required: false
+        fields:
+          - { label: Descripción para Google (máx. 170), name: descripcion, widget: text, required: false }
+
+  - name: ajustes
+    label: Ajustes del sitio
+    editor: { preview: false }
+    files:
+      - name: site
+        label: Datos del agente y contacto
+        file: src/data/site.json
+        fields:
+          - label: Agente
+            name: agente
+            widget: object
+            fields:
+              - { label: Nombre, name: nombre, widget: string }
+              - { label: Título, name: titulo, widget: string }
+              - { label: Licencia, name: licencia, widget: string }
+              - { label: Teléfono, name: telefono, widget: string }
+              - { label: WhatsApp (solo números con lada), name: whatsapp, widget: string }
+              - { label: Email, name: email, widget: string }
+              - { label: Foto, name: foto, widget: image }
+              - { label: Biografía, name: bio, widget: text }
+              - { label: Idiomas, name: idiomas, widget: list }
+              - { label: Zonas que atiende, name: zonas, widget: list }
+          - label: Broker
+            name: broker
+            widget: object
+            fields:
+              - { label: Nombre, name: nombre, widget: string }
+              - { label: Dirección, name: direccion, widget: string }
+              - { label: Teléfono, name: telefono, widget: string }
+          - label: Redes sociales
+            name: redes
+            widget: object
+            fields:
+              - { label: Instagram, name: instagram, widget: string, required: false }
+              - { label: Facebook, name: facebook, widget: string, required: false }
+              - { label: LinkedIn, name: linkedin, widget: string, required: false }
+              - { label: YouTube, name: youtube, widget: string, required: false }
+          - { label: Moneda (ISO), name: moneda, widget: string }
+          - { label: Locale, name: locale, widget: string }
+          - { label: Unidad de área, name: unidadArea, widget: string }
+          - label: Calculadora de hipoteca (valores iniciales)
+            name: hipoteca
+            widget: object
+            fields:
+              - { label: Tasa %, name: tasa, widget: number, value_type: float }
+              - { label: Plazo (años), name: plazo, widget: number, value_type: int }
+              - { label: Enganche %, name: enganche, widget: number, value_type: int }

@@ -1,0 +1,32 @@
+---
+import site from '@/data/site.json';
+import Icon from './Icon.astro';
+const { inmersivo = false } = Astro.props;
+const path = Astro.url.pathname;
+const links = [
+  { href: '/propiedades', label: 'Propiedades' },
+  { href: '/propiedades?operacion=renta', label: 'Rentas' },
+  { href: '/favoritos', label: 'Favoritos' },
+  { href: '/sobre-mi', label: 'Sobre mí' },
+  { href: '/contacto', label: 'Contacto' },
+];
+---
+<header class:list={['sticky top-0 z-40 bg-white/85 backdrop-blur-lg border-b border-line', inmersivo && 'hidden md:block']}>
+  <div class="container-app flex h-16 items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2.5 min-w-0">
+      <span class="grid size-9 shrink-0 place-items-center rounded-xl bg-brand text-white font-display text-lg">EA</span>
+      <span class="leading-tight min-w-0">
+        <span class="block font-semibold truncate">{site.agente.nombre}</span>
+        <span class="block text-xs text-muted truncate">{site.agente.titulo}</span>
+      </span>
+    </a>
+    <nav class="hidden md:flex items-center gap-1 text-[15px]" aria-label="Principal">
+      {links.map((l) => (
+        <a href={l.href} class:list={['rounded-full px-3.5 py-2 font-medium hover:bg-sand', path.startsWith(l.href.split('?')[0]) && l.href !== '/propiedades?operacion=renta' && 'text-brand bg-sand']}>{l.label}</a>
+      ))}
+    </nav>
+    <a href={`tel:${site.agente.telefono.replace(/[^+\d]/g, '')}`} class="btn-primary h-10 px-4 text-sm">
+      <Icon name="phone" size={16} /><span class="hidden sm:inline">Llamar</span>
+    </a>
+  </div>
+</header>

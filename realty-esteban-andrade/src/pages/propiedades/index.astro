@@ -1,0 +1,12 @@
+---
+import Base from '@/layouts/Base.astro';
+import PropertyExplorer from '@/islands/PropertyExplorer.vue';
+import { getPropiedades, toCard } from '@/lib/propiedades';
+const cards = await Promise.all((await getPropiedades()).map(toCard));
+---
+<Base title="Propiedades en venta y renta" description="Busca casas, departamentos y terrenos en venta y renta. Filtra por precio, recámaras, baños y zona, con mapa interactivo.">
+  <div class="container-app">
+    <h1 class="sr-only">Propiedades en venta y renta</h1>
+    <PropertyExplorer client:load cards={cards} />
+  </div>
+</Base>

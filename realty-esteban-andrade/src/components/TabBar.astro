@@ -1,0 +1,23 @@
+---
+// Barra de pestañas inferior estilo app (solo móvil)
+import Icon from './Icon.astro';
+const path = Astro.url.pathname;
+const tabs = [
+  { href: '/', icon: 'home', label: 'Inicio', active: path === '/' },
+  { href: '/propiedades', icon: 'search', label: 'Buscar', active: path.startsWith('/propiedades') },
+  { href: '/favoritos', icon: 'heart', label: 'Favoritos', active: path.startsWith('/favoritos') },
+  { href: '/contacto', icon: 'user', label: 'Contacto', active: path.startsWith('/contacto') || path.startsWith('/sobre-mi') },
+];
+---
+<nav id="tabbar" class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/92 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]" aria-label="Navegación">
+  <ul class="grid grid-cols-4">
+    {tabs.map((t) => (
+      <li>
+        <a href={t.href} aria-current={t.active ? 'page' : undefined} class:list={['flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium', t.active ? 'text-brand' : 'text-muted']}>
+          <span class:list={['grid h-7 w-12 place-items-center rounded-full transition', t.active && 'bg-brand/10']}><Icon name={t.icon} size={21} /></span>
+          {t.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

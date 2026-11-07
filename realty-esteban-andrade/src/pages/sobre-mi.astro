@@ -1,0 +1,22 @@
+---
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import site from '@/data/site.json';
+import { whatsappUrl } from '@/lib/format';
+---
+<Base title="Sobre mí" description={site.agente.bio}>
+  <div class="container-app max-w-3xl pt-8">
+    <img src={site.agente.foto} alt={site.agente.nombre} width="160" height="160" class="size-40 rounded-3xl bg-white object-cover ring-1 ring-line" />
+    <h1 class="mt-6 text-4xl">{site.agente.nombre}</h1>
+    <p class="text-muted">{site.agente.titulo} · {site.agente.licencia}</p>
+    <p class="mt-6 text-lg leading-relaxed text-ink-2">{site.agente.bio}</p>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      <div class="card p-5"><p class="label">Idiomas</p><p class="mt-1 font-semibold">{site.agente.idiomas.join(' · ')}</p></div>
+      <div class="card p-5"><p class="label">Zonas</p><p class="mt-1 font-semibold">{site.agente.zonas.join(' · ')}</p></div>
+    </div>
+    <div class="mt-8 flex flex-wrap gap-2">
+      <a class="btn-wa" href={whatsappUrl('Hola Esteban, ')} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />WhatsApp</a>
+      <a class="btn-primary" href="/contacto">Contactar</a>
+    </div>
+  </div>
+</Base>

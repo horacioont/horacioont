@@ -1,0 +1,24 @@
+---
+import site from '@/data/site.json';
+const year = new Date().getFullYear();
+---
+<footer class="mt-16 border-t border-line bg-white">
+  <div class="container-app grid gap-8 py-10 md:grid-cols-3 text-sm text-ink-2">
+    <div>
+      <p class="font-display text-lg text-ink">{site.agente.nombre}</p>
+      <p>{site.agente.titulo} · {site.agente.licencia}</p>
+      <p class="mt-2"><a class="hover:underline" href={`tel:${site.agente.telefono.replace(/[^+\d]/g, '')}`}>{site.agente.telefono}</a> · <a class="hover:underline" href={`mailto:${site.agente.email}`}>{site.agente.email}</a></p>
+    </div>
+    <div>
+      <p class="label mb-2">Broker</p>
+      <p>{site.broker.nombre}</p>
+      <p>{site.broker.direccion}</p>
+      <p>{site.broker.telefono}</p>
+    </div>
+    <div class="flex items-start gap-3 md:justify-end">
+      <!-- Logos Equal Housing Opportunity / REALTOR® van aquí cuando estén los archivos oficiales -->
+      <p class="text-xs text-muted max-w-xs">La información se considera confiable pero no está garantizada. Precios y disponibilidad sujetos a cambio sin previo aviso. Igualdad de oportunidades en vivienda.</p>
+    </div>
+  </div>
+  <div class="border-t border-line py-4 text-center text-xs text-muted">© {year} {site.agente.nombre}. Todos los derechos reservados.</div>
+</footer>

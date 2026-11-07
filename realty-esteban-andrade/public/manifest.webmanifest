@@ -1,0 +1,10 @@
+{
+  "name": "Esteban Andrade · Bienes raíces",
+  "short_name": "E. Andrade",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f4f0",
+  "theme_color": "#13315c",
+  "lang": "es",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

@@ -1,0 +1,13 @@
+---
+import Base from '@/layouts/Base.astro';
+import FavoritesList from '@/islands/FavoritesList.vue';
+import { getPropiedades, toCard } from '@/lib/propiedades';
+const cards = await Promise.all((await getPropiedades()).map(toCard));
+---
+<Base title="Mis favoritos" description="Propiedades guardadas en este dispositivo.">
+  <div class="container-app pt-8">
+    <h1 class="text-3xl">Mis favoritos</h1>
+    <p class="mt-1 text-ink-2">Guardados en este dispositivo, sin necesidad de crear cuenta.</p>
+    <div class="mt-6"><FavoritesList client:only="vue" cards={cards} /></div>
+  </div>
+</Base>
